@@ -1,0 +1,459 @@
+CODE FOR AODV:
+# This script is created by NSG2 beta1
+# <http://wushoupong.googlepages.com/nsg>
+#===================================
+#     Simulation parameters setup
+#===================================
+set val(chan)   Channel/WirelessChannel    ;# channel type
+set val(prop)   Propagation/TwoRayGround   ;# radio-propagation model
+set val(netif)  Phy/WirelessPhy            ;# network interface type
+set val(mac)    Mac/802_11                 ;# MAC type
+set val(ifq)    Queue/DropTail/PriQueue    ;# interface queue type
+set val(ll)     LL                         ;# link layer type
+set val(ant)    Antenna/OmniAntenna        ;# antenna model
+set val(ifqlen) 50                         ;# max packet in ifq
+set val(nn)     24                         ;# number of mobilenodes
+set val(rp)     AODV                       ;# routing protocol
+set val(x)      3585                      ;# X dimension of topography
+set val(y)      100                      ;# Y dimension of topography
+set val(stop)   10.0                         ;# time of simulation end
+#===================================
+#        Initialization        
+#===================================
+#Create a ns simulator
+set ns [new Simulator]
+#Setup topography object
+set topo       [new Topography]
+$topo load_flatgrid $val(x) $val(y)
+create-god $val(nn)
+#Open the NS trace file
+set tracefile [open sai_aodv.tr w]
+$ns trace-all $tracefile
+#Open the NAM trace file
+set namfile [open sai_aodv.nam w]
+$ns namtrace-all $namfile
+$ns namtrace-all-wireless $namfile $val(x) $val(y)
+set chan [new $val(chan)];#Create wireless channel
+#===================================
+#     Mobile node parameter setup
+#===================================
+$ns node-config -adhocRouting  $val(rp) \
+                -llType        $val(ll) \
+                -macType       $val(mac) \
+                -ifqType       $val(ifq) \
+                -ifqLen        $val(ifqlen) \
+                -antType       $val(ant) \
+                -propType      $val(prop) \
+                -phyType       $val(netif) \
+                -channel       $chan \
+                -topoInstance  $topo \
+                -agentTrace    ON \
+                -routerTrace   ON \
+                -macTrace      ON \
+                -movementTrace ON
+#===================================
+#        Nodes Definition        
+#===================================
+#Create 24 nodes
+set n(0) [$ns node]
+$n(0) set X_ 198
+$n(0) set Y_ 302
+$n(0) set Z_ 0.0
+$ns initial_node_pos $n(0) 20
+set n(1) [$ns node]
+$n(1) set X_ 297
+$n(1) set Y_ 402
+$n(1) set Z_ 0.0
+$ns initial_node_pos $n(1) 20
+set n(2) [$ns node]
+$n(2) set X_ 397
+$n(2) set Y_ 496
+$n(2) set Z_ 0.0
+$ns initial_node_pos $n(2) 20
+set n(3) [$ns node]
+$n(3) set X_ 294
+$n(3) set Y_ 199
+$n(3) set Z_ 0.0
+$ns initial_node_pos $n(3) 20
+set n(4) [$ns node]
+$n(4) set X_ 396
+$n(4) set Y_ 107
+$n(4) set Z_ 0.0
+$ns initial_node_pos $n(4) 20
+set n(5) [$ns node]
+$n(5) set X_ 498
+$n(5) set Y_ 606
+$n(5) set Z_ 0.0
+$ns initial_node_pos $n(5) 20
+set n(6) [$ns node]
+$n(6) set X_ 496
+$n(6) set Y_ 6
+$n(6) set Z_ 0.0
+$ns initial_node_pos $n(6) 20
+set n(7) [$ns node]
+$n(7) set X_ 597
+$n(7) set Y_ 602
+$n(7) set Z_ 0.0
+$ns initial_node_pos $n(7) 20
+set n(8) [$ns node]
+$n(8) set X_ 693
+$n(8) set Y_ 604
+$n(8) set Z_ 0.0
+$ns initial_node_pos $n(8) 20
+set n(9) [$ns node]
+$n(9) set X_ 798
+$n(9) set Y_ 603
+$n(9) set Z_ 0.0
+$ns initial_node_pos $n(9) 20
+set n(10) [$ns node]
+$n(10) set X_ 897
+$n(10) set Y_ 599
+$n(10) set Z_ 0.0
+$ns initial_node_pos $n(10) 20
+set n(11) [$ns node]
+$n(11) set X_ 994
+$n(11) set Y_ 606
+$n(11) set Z_ 0.0
+$ns initial_node_pos $n(11) 20
+set n(12) [$ns node]
+$n(12) set X_ 1097
+$n(12) set Y_ 602
+$n(12) set Z_ 0.0
+$ns initial_node_pos $n(12) 20
+set n(13) [$ns node]
+$n(13) set X_ 604
+$n(13) set Y_ 0
+$n(13) set Z_ 0.0
+$ns initial_node_pos $n(13) 20
+set n(14) [$ns node]
+$n(14) set X_ 694
+$n(14) set Y_ 2
+$n(14) set Z_ 0.0
+$ns initial_node_pos $n(14) 20
+set n(15) [$ns node]
+$n(15) set X_ 801
+$n(15) set Y_ 3
+$n(15) set Z_ 0.0
+$ns initial_node_pos $n(15) 20
+set n(16) [$ns node]
+$n(16) set X_ 906
+$n(16) set Y_ 3
+$n(16) set Z_ 0.0
+$ns initial_node_pos $n(16) 20
+set n(17) [$ns node]
+$n(17) set X_ 996
+$n(17) set Y_ -1
+$n(17) set Z_ 0.0
+$ns initial_node_pos $n(17) 20
+set n(18) [$ns node]
+$n(18) set X_ 1093
+$n(18) set Y_ 3
+$n(18) set Z_ 0.0
+$ns initial_node_pos $n(18) 20
+set n(19) [$ns node]
+$n(19) set X_ 1200
+$n(19) set Y_ 99
+$n(19) set Z_ 0.0
+$ns initial_node_pos $n(19) 20
+set n(20) [$ns node]
+$n(20) set X_ 1294
+$n(20) set Y_ 202
+$n(20) set Z_ 0.0
+$ns initial_node_pos $n(20) 20
+set n(21) [$ns node]
+$n(21) set X_ 1394
+$n(21) set Y_ 303
+$n(21) set Z_ 0.0
+$ns initial_node_pos $n(21) 20
+set n(22) [$ns node]
+$n(22) set X_ 1298
+$n(22) set Y_ 406
+$n(22) set Z_ 0.0
+$ns initial_node_pos $n(22) 20
+set n(23) [$ns node]
+$n(23) set X_ 1197
+$n(23) set Y_ 499
+$n(23) set Z_ 0.0
+$ns initial_node_pos $n(23) 20
+#===================================
+#        Q-Learning Setup        
+#===================================
+set alpha 0.5   ;# Learning rate
+set gamma 0.9   ;# Discount factor
+set epsilon 0.2 ;# Higher exploration initially (decays over time)
+# Initialize Q-table
+array set QTable {}
+#==============================
+#  Define possible actions 
+#==============================
+proc get_neighbors {node} {
+    global ns n val
+    if {![info exists n($node)]} {
+        puts "⚠️ Warning: Node $node does not exist!"
+        return [list]
+    }
+    set neighbors [list]
+    set node_x [$n($node) set X_]
+    set node_y [$n($node) set Y_]
+    for {set i 0} {$i < $val(nn)} {incr i} {
+        if {$i != $node && [info exists n($i)]} {
+            set neighbor_x [$n($i) set X_]
+            set neighbor_y [$n($i) set Y_]
+            # Euclidean distance
+            set distance [expr {sqrt(pow(($node_x - $neighbor_x), 2) + pow(($node_y - $neighbor_y), 2))}] 
+            if {$distance < 250} {  ;# Assuming 250m transmission range
+                lappend neighbors $i
+            }
+        }
+    }
+    puts "📡 Node $node has neighbors: $neighbors"
+    return $neighbors
+}
+#==============================
+#  Initialize Q-table 
+#==============================
+proc initialize_q_table {} {
+    global QTable val
+    for {set i 0} {$i < $val(nn)} {incr i} {
+        if {![info exists n($i)]} { continue }
+        set neighbors [get_neighbors $i]
+        foreach n $neighbors {
+            if {![info exists QTable($i,$n)]} {
+                set QTable($i,$n) 0.0
+            }
+        }
+    }
+    puts "✅ Q-Table initialized"
+}
+#==============================
+#  Choose Best Action 
+#==============================
+proc choose_action {node} {
+    global QTable epsilon
+
+    set actions [get_neighbors $node]
+    if {[llength $actions] == 0} {
+        puts "⚠️ No actions available for node $node"
+        return ""
+    }
+    # Ensure Q-table is initialized for this node
+    foreach a $actions {
+        if {![info exists QTable($node,$a)]} {
+            set QTable($node,$a) 0.0
+        }
+    }
+    if {[expr rand()] < $epsilon} {
+        # Exploration: Random action
+        set action [lindex $actions [expr {int(rand() * [llength $actions])}]]
+        puts "🔄 Exploring: Node $node randomly chooses action $action"
+    } else {
+        # Exploitation: Choose best action
+        set max_q -99999
+        set best_action [lindex $actions 0]
+        foreach a $actions {
+            set q_value $QTable($node,$a)
+            if {$q_value > $max_q} {
+                set max_q $q_value
+                set best_action $a
+            }
+        }
+        set action $best_action
+        puts "💡 Exploiting: Node $node chooses best action $action (Q = $max_q)"
+    }
+    return $action
+}
+#==============================
+#  Better Reward Function 
+#==============================
+proc compute_reward {throughput delay loss} {
+    # Normalize values (assuming throughput max = 1000, delay max = 100, loss max = 100)
+    set normalized_throughput [expr {$throughput / 10.0}]  ;# Higher is better
+    set normalized_delay [expr {100.0 / ($delay + 1)}]     ;# Lower delay = higher reward
+    set normalized_loss [expr {-5.0 * $loss}]              ;# Higher loss = strong penalty
+    # Weighted sum of factors
+    set reward [expr {($normalized_throughput * 0.5) + ($normalized_delay * 0.3) + ($normalized_loss * 0.2)}]
+    puts "🎯 Reward Computed: Throughput=$throughput, Delay=$delay, Loss=$loss → Reward=$reward"
+    return $reward
+}
+#==============================
+#  Update Q-Table 
+#==============================
+proc update_q_table {node action reward next_node} {
+    global QTable alpha gamma
+
+    if {![info exists QTable($node,$action)]} {
+        set QTable($node,$action) 0.0
+    }
+    # Get the best Q-value for the next state
+    set max_q_next -99999
+    foreach next_action [get_neighbors $next_node] {
+        if {[info exists QTable($next_node,$next_action)]} {
+            if {$QTable($next_node,$next_action) > $max_q_next} {
+                set max_q_next $QTable($next_node,$next_action)
+            }
+        }
+    }
+    if {$max_q_next == -99999} { set max_q_next 0.0 }
+    # Q-learning formula
+    set old_q $QTable($node,$action)
+    set new_q [expr {(1 - $alpha) * $old_q + $alpha * ($reward + $gamma * $max_q_next)}]
+    set QTable($node,$action) $new_q
+    puts "📊 Q-Update: Q($node → $action) changed from $old_q to $new_q"
+}
+#==============================
+#  Adaptive Exploration Rate  
+#==============================
+proc adjust_exploration_rate {} {
+    global epsilon
+    set epsilon [expr {$epsilon * 0.99}]
+}
+#==============================
+#  Route Failure Handling 
+#==============================
+proc handle_route_failure {node failed_action} {
+    global QTable
+    set penalty -50.0  ;# Strong penalty for failed route
+    set QTable($node,$failed_action) [expr {$QTable($node,$failed_action) + $penalty}]
+    puts "❌ Route Failure: Penalizing Q($node → $failed_action) with $penalty"
+}
+#==============================
+#  Main Routing Decision 
+#==============================
+proc make_routing_decision {} {
+    global ns n val
+    for {set i 0} {$i < $val(nn)} {incr i} {
+        set next_hop [choose_action $i]
+        if {$next_hop != ""} {
+            # Simulated metrics (replace with real metrics from ns-2)
+            set throughput [expr {rand() * 1000}]
+            set delay [expr {rand() * 100}]
+            set loss [expr {rand() * 10}]
+            set reward [compute_reward $throughput $delay $loss]
+            update_q_table $i $next_hop $reward $next_hop
+            adjust_exploration_rate
+            # Ensure AODV updates correctly
+            $ns rtproto LS $n($i) $next_hop
+        }
+    }
+}
+#==============================
+#  Initialization & Execution  
+#==============================
+initialize_q_table
+$ns at 1.0 "make_routing_decision"
+#===================================
+#        Performance Metrics        
+#===================================
+# Calculate performance metrics
+proc calculate_performance_metrics {} {
+    global tracefile val
+    set sent_packets 0
+    set received_packets 0
+    set dropped_packets 0
+    set routing_overhead 0
+    set total_bytes 0
+    set start_time 0
+    set end_time 0
+    # Open trace file for reading
+    set trace [open sai_aodv.tr r]
+    while {[gets $trace line] != -1} {
+        # Extract event type
+        set event [lindex $line 0]
+        # Count sent packets
+        if {$event == "s"} {
+            incr sent_packets
+            if {$start_time == 0} {
+                set start_time [lindex $line 1]
+            }
+            set end_time [lindex $line 1]
+        }
+        # Count received packets
+        if {$event == "r"} {
+            incr received_packets
+            set packet_size [lindex $line 5]
+            set total_bytes [expr {$total_bytes + $packet_size}]
+        }
+        # Count dropped packets
+        if {$event == "D"} {
+            incr dropped_packets
+        }
+        # Count routing overhead (control packets)
+        if {$event == "s" && [lindex $line 19] == "RTR"} {
+            incr routing_overhead
+        }
+    }
+    close $trace
+    # Calculate metrics
+    set packet_delivery_ratio [expr {double($received_packets) / $sent_packets * 100}]
+    set packet_drop_ratio [expr {double($dropped_packets) / $sent_packets * 100}]
+    set throughput [expr {($total_bytes * 8) / ($end_time - $start_time)}]  ;# in bits per second
+    set routing_overhead_ratio [expr {double($routing_overhead) / $sent_packets * 100}]
+    # Print metrics
+    puts "\n📊 Performance Metrics:"
+    puts "Sent Packets: $sent_packets"
+    puts "Received Packets: $received_packets"
+    puts "Dropped Packets: $dropped_packets"
+    puts "Packet Delivery Ratio (PDR): $packet_delivery_ratio%"
+    puts "Packet Drop Ratio: $packet_drop_ratio%"
+    puts "Throughput: $throughput bps"
+    puts "Routing Overhead: $routing_overhead_ratio%"
+}
+#===================================
+#        Agents Definition        
+#===================================
+#Setup a TCP connection
+set tcp0 [new Agent/TCP]
+$ns attach-agent $n(0) $tcp0
+set sink1 [new Agent/TCPSink]
+$ns attach-agent $n(21) $sink1
+$ns connect $tcp0 $sink1
+$tcp0 set packetSize_ 1500
+#Setup a UDP connection
+set udp2 [new Agent/UDP]
+$ns attach-agent $n(5) $udp2
+set null3 [new Agent/Null]
+$ns attach-agent $n(8) $null3
+$ns connect $udp2 $null3
+$udp2 set packetSize_ 1500
+#===================================
+#        Applications Definition        
+#===================================
+#Setup a FTP Application over TCP connection
+set ftp0 [new Application/FTP]
+$ftp0 attach-agent $tcp0
+$ns at 1.0 "$ftp0 start"
+$ns at 8.0 "$ftp0 stop"
+#Setup a CBR Application over UDP connection
+set cbr1 [new Application/Traffic/CBR]
+$cbr1 attach-agent $udp2
+$cbr1 set packetSize_ 1000
+$cbr1 set rate_ 1.0Mb
+$cbr1 set random_ null
+$ns at 1.0 "$cbr1 start"
+$ns at 5.0 "$cbr1 stop"
+#===================================
+#        Termination        
+#===================================
+#Define a 'finish' procedure
+proc finish {} {
+    global ns tracefile namfile
+    $ns flush-trace
+    close $tracefile
+    close $namfile
+    # Calculate performance metrics
+    calculate_performance_metrics
+    exec nam sai_aodv.nam &
+    exec awk -f PDR-C.awk sai_aodv.tr &
+    exec awk -f routing_overhead-C.awk sai_aodv.tr &
+    exec awk -f delay-C.awk sai_aodv.tr &
+    exec awk -f throughput-C.awk sai_aodv.tr &
+    exec awk -f jitter-C.awk sai_aodv.tr &
+    exit 0
+}
+for {set i 0} {$i < $val(nn) } { incr i } {
+    $ns at $val(stop) "\$n($i) reset"
+}
+$ns at $val(stop) "$ns nam-end-wireless $val(stop)"
+$ns at $val(stop) "finish"
+$ns at $val(stop) "puts \"done\" ; $ns halt"
+$ns run
